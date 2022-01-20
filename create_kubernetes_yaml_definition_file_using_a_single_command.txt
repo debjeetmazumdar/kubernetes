@@ -1,0 +1,117 @@
+Q: Create a new Deployment with the below attributes using your own deployment definition file.
+
+
+
+Name: httpd-frontend;
+Replicas: 3;
+Image: httpd:2.4-alpine
+
+
+
+Ans:Below is the command to create the deployment definition file  "deployment-demo.yaml"
+
+kubectl create deployment --image=httpd:2.4-alpine --replicas=3 --dry-run='client' --output=yaml httpd-frontend > deployment-demo.yaml
+
+
+controlplane ~ ➜  cat deployment-demo.yaml 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: httpd-frontend
+  name: httpd-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpd-frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: httpd-frontend
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+        resources: {}
+status: {}
+
+
+
+
+
+
+kubectl create -f deployment-demo.yaml
+
+
+
+
+
+Some notes:
+
+--dry-run='none': Must be "none", "server", or "client". If client
+strategy, only print the object that would be sent, without sending it. If
+server strategy, submit server-side request without persisting the resource.
+
+
+-o, --output='': Output format. One of:
+json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file.
+
+
+
+
+See below example. So here, 
+
+
+controlplane ~ ➜  kubectl create deployment --image=busybox --replicas=2 --dry-run='client' --output=json busybox-deployment > deployment-busybox-demo.json
+
+controlplane ~ ➜  
+
+controlplane ~ ➜  cat deployment-busybox-demo.json 
+{
+    "kind": "Deployment",
+    "apiVersion": "apps/v1",
+    "metadata": {
+        "name": "busybox-deployment",
+        "creationTimestamp": null,
+        "labels": {
+            "app": "busybox-deployment"
+        }
+    },
+    "spec": {
+        "replicas": 2,
+        "selector": {
+            "matchLabels": {
+                "app": "busybox-deployment"
+            }
+        },
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "busybox-deployment"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "name": "busybox",
+                        "image": "busybox",
+                        "resources": {}
+                    }
+                ]
+            }
+        },
+        "strategy": {}
+    },
+    "status": {}
+}
+
+controlplane ~ ➜  
+
+controlplane ~ ➜  kubectl create -f deployment-busybox-demo.json 
+deployment.apps/busybox-deployment created
