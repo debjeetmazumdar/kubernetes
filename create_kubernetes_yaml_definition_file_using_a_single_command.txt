@@ -64,7 +64,7 @@ json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonp
 
 
 
-See below example. So here, 
+See below example. So here, I have created a definition file in json format. And later the same json file have been used to create kubernetes object ( deployment)
 
 
 controlplane ~ ➜  kubectl create deployment --image=busybox --replicas=2 --dry-run='client' --output=json busybox-deployment > deployment-busybox-demo.json
